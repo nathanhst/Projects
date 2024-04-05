@@ -1,4 +1,3 @@
-#%%
 from numpy import *
 from numpy.fft import  fft, ifft
 from numpy.linalg import norm
@@ -67,7 +66,7 @@ def simulation(potential, initialvalue):
         print("E pot: %f" % potE[k])
         print("E tot: %f" % (cinE[k]+potE[k]))
   
-        #plot(x, v, V, k, h)
+        plot(x, v, V, k, h)
 
     fig = figure()
     ax = fig.gca()
@@ -107,8 +106,8 @@ def plot(x, v, V, k, h, ymin=-3, ymax=3):
     ax.set_title("Time t=%f" % (k*h))
     ax.set_xlim(x.min(), x.max())
     ax.set_ylim(ymin, ymax)
-    #fig.savefig("solution_at_timestep %04d.png" % k)
-    show()
+    fig.savefig("solution_at_timestep %04d.png" % k)
+    #show()
     close(fig)
 
 
@@ -129,12 +128,18 @@ if __name__ == "__main__":
         V = 0.5*(x**2)
         return V
     
-
     def sombrero(x, k=1.0, r0=1.0):
         return 0.5 * k * (sqrt(x**2) - r0)**2
     
     def step(x, V0=1):
         return np.where((x >= 0) & (x <= 1), V0, 0)
+
+    def tunneling(x, V0 = 1000000):
+        return np.where((x >= 0) & (x<=0.2),V0,0)
+    
+    def sinus(x, a = 2.5, V0 = 1):
+        V = V0 * (np.sin(np.pi * x / a) ** 2)
+        return V
 
 
 
@@ -142,6 +147,5 @@ if __name__ == "__main__":
     g0 = lambda x: (ieps/pi)**(0.25) * exp(-(0.5*ieps)*(x+0.5)**2) * exp(-1j*x*ieps)
     g1 = lambda x: (ieps/pi)**(0.25) * exp(-(0.5*ieps)*x**2)
 
-    simulation(harmonic, g0)
+    simulation(sinus, g0)
 
-# %%
